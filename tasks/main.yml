@@ -1,0 +1,17 @@
+---
+- name: Install Check MK and dependencies
+  yum: name='{{item}}' state=present validate_certs={{check_mk_agent_rpm_url_validate_certs}}
+  with_items:
+    - '{{check_mk_agent_rpm}}'
+    - xinetd
+  notify: Restart xinetd
+
+- name: Configure xinetd
+  lineinfile: dest=/etc/xinetd.d/{{check_mk_agent_xinetd_file}} regexp='^(\s*)#?({{item.key}}\s+)=' line='\1\2= {{item.value}}' backrefs=yes
+  with_dict:
+    disable: 'no'
+    only_from: '{{check_mk_agent_servers | join(" ")}}'
+  notify: Restart xinetd
+
+- name: Enable and start xinetd service
+  service: name=xinetd state=started enabled=yes

@@ -1,0 +1,14 @@
+galaxy_info:
+  author: Luis Gracia
+  description: Install Check_MK agent
+  license: MIT
+  min_ansible_version: 2.3
+  platforms:
+    - name: EL
+      versions:
+        - 7
+  galaxy_tags:
+    - system
+    - monitoring
+dependencies:
+  - geerlingguy.repo-epel

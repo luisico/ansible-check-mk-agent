@@ -1,0 +1,4 @@
+---
+# These variables depend on the rpm coming from EPEL or a Check_MK site
+check_mk_agent_rpm: '{{ ((check_mk_agent_rpm_url is defined) and (check_mk_agent_rpm_url != None)) | ternary(check_mk_agent_rpm_url, "check-mk-agent") }}'
+check_mk_agent_xinetd_file: '{{ ((check_mk_agent_rpm_url is defined) and (check_mk_agent_rpm_url != None)) | ternary("check_mk", "check-mk-agent") }}'

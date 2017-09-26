@@ -1,0 +1,13 @@
+---
+# The agent can be installed from the EPEL repository or your Check_MK site.
+# EPEL will be used if `check_mk_agent_rpm_url` is blank (default).
+
+# URL to download the rpm from (See "WATO / Monitoring Agents" in your Check_MK installation).
+check_mk_agent_rpm_url:
+
+# Skip cert validation, ie your Check_MK site has a self signed certificate
+check_mk_agent_rpm_url_validate_certs: yes
+
+# List of Check_MK servers to allow connection from
+check_mk_agent_servers:
+  - 127.0.0.1
