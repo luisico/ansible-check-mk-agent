@@ -11,7 +11,9 @@
   with_dict:
     disable: 'no'
     only_from: '{{check_mk_agent_servers | join(" ")}}'
+  register: check_mk_agent_r__xinetd
   notify: Restart xinetd
+  ignore_errors: ansible_check_mode and "does not exist" in check_mk_agent_r__xinetd.msg
 
 - name: Enable and start xinetd service
   service: name=xinetd state=started enabled=yes
