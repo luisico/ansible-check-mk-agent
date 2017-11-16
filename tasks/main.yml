@@ -1,6 +1,6 @@
 ---
 - name: Install Check MK and dependencies
-  yum: name='{{item}}' state=present validate_certs={{check_mk_agent_rpm_url_validate_certs}}
+  yum: name='{{item}}' state=present validate_certs={{check_mk_agent_validate_certs}}
   with_items:
     - '{{check_mk_agent_rpm}}'
     - xinetd
@@ -17,3 +17,7 @@
 
 - name: Enable and start xinetd service
   service: name=xinetd state=started enabled=yes
+
+- name: Install extra plugins
+  get_url: dest=/usr/lib/check_mk_agent/plugins url={{item}} mode=0755 validate_certs={{check_mk_agent_validate_certs}}
+  with_items: '{{check_mk_agent_plugins}}'

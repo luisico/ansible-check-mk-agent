@@ -4,7 +4,7 @@ Install [Check_MK Agent](http://mathias-kettner.com/checkmk.html).
 
 Check_MK agent uses xinetd, which is also installed with this role. The xinetd configuration for Check_MK agent can be found in `/etc/xinetd.d/check-mk-agent`. Note that Check_MK agent listens by default on port '6556' but this role does not manage the firewall.
 
-The agent is installed from the EPEL repository or your Check_MK site. EPEL is used if `check_mk_agent_rpm_url` is blank (default).
+The agent is installed from the EPEL repository or your Check_MK site. EPEL is used if `check_mk_agent_rpm_url` is blank (default). Additional plugins will be installed if listed in `check_mk_agent_plugins` (as full url).
 
 Requirements
 ------------
@@ -32,7 +32,7 @@ TODO
 - Install a specific version using EPEL.
 - Support upgrades and downgrades from EPEL and a Check_MK site.
 - Check if firewall port is open.
-- Add custom check and plugins.
+- Add custom checks.
 
 Licence
 -------

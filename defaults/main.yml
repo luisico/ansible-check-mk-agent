@@ -6,8 +6,11 @@
 check_mk_agent_rpm_url:
 
 # Skip cert validation, ie your Check_MK site has a self signed certificate
-check_mk_agent_rpm_url_validate_certs: yes
+check_mk_agent_validate_certs: yes
 
 # List of Check_MK servers to allow connection from
 check_mk_agent_servers:
   - 127.0.0.1
+
+# List of plugins (full url)
+check_mk_agent_plugins: []
