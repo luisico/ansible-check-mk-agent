@@ -14,3 +14,7 @@ check_mk_agent_servers:
 
 # List of plugins (full url)
 check_mk_agent_plugins: []
+
+# MK_LIBDIR directory (set in "/usr/bin/check_mk_agent")
+# Note that EPEL sets this to "/usr/share/check-mk-agent" by default
+check_mk_agent_libdir: /usr/lib/check_mk_agent

@@ -6,6 +6,8 @@ Check_MK agent uses xinetd, which is also installed with this role. The xinetd c
 
 The agent is installed from the EPEL repository or your Check_MK site. EPEL is used if `check_mk_agent_rpm_url` is blank (default). Additional plugins will be installed if listed in `check_mk_agent_plugins` (as full url). Note that switching from the agent source only works when upgrading the rpm package.
 
+Note that EPEL modifies the location of `MK_LIBDIR` from the default `/usr/lib/check_mk_agent` to `/usr/share/check-mk-agent`. This directory can be set in this role in `check_mk_agent_libdir`.
+
 Requirements
 ------------
 See `meta/main.yml`.
@@ -32,7 +34,7 @@ TODO
 - Install a specific version using EPEL.
 - Support upgrades and downgrades from EPEL and a Check_MK site.
 - Check if firewall port is open.
-- Add custom checks.
+- Support local checks in MK_LIBDIR/local.
 
 Licence
 -------

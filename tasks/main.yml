@@ -6,6 +6,9 @@
     - xinetd
   notify: Restart xinetd
 
+- name: Configure directory for MK_LIBDIR
+  lineinfile: dest=/usr/bin/check_mk_agent regexp='^export MK_LIBDIR=.*' line='export MK_LIBDIR="{{check_mk_agent_libdir}}"'
+
 - name: Configure xinetd
   lineinfile: dest=/etc/xinetd.d/{{check_mk_agent_xinetd_file}} regexp='^(\s*)#?({{item.key}}\s+)=' line='\1\2= {{item.value}}' backrefs=yes
   with_dict:
