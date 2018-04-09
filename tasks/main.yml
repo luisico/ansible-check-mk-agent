@@ -6,6 +6,12 @@
     - xinetd
   notify: Restart xinetd
 
+- name: Create MK_LIBDIR destination directory
+  file: path='{{check_mk_agent_libdir}}/{{item}}' state=directory owner=root group=root mode=0755
+  with_items:
+    - plugins
+    - local
+
 - name: Configure directory for MK_LIBDIR
   lineinfile: dest=/usr/bin/check_mk_agent regexp='^export MK_LIBDIR=.*' line='export MK_LIBDIR="{{check_mk_agent_libdir}}"'
 
@@ -22,5 +28,5 @@
   service: name=xinetd state=started enabled=yes
 
 - name: Install extra plugins
-  get_url: dest=/usr/lib/check_mk_agent/plugins url={{item}} mode=0755 validate_certs={{check_mk_agent_validate_certs}}
+  get_url: dest=/usr/lib/check_mk_agent/plugins/ url={{item}} mode=0755 validate_certs={{check_mk_agent_validate_certs}}
   with_items: '{{check_mk_agent_plugins}}'
