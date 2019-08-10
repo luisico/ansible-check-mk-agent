@@ -1,9 +1,11 @@
 ---
 - name: Install Check MK and dependencies
-  yum: name='{{item}}' state=latest validate_certs={{check_mk_agent_validate_certs}}
-  with_items:
-    - '{{check_mk_agent_rpm}}'
-    - xinetd
+  yum:
+    name:
+      - '{{check_mk_agent_rpm}}'
+      - xinetd
+    state: latest
+    validate_certs: '{{check_mk_agent_validate_certs}}'
   notify: Restart xinetd
 
 - name: Create MK_LIBDIR destination directory
