@@ -10,7 +10,7 @@
 
 - name: Create MK_LIBDIR destination directory
   file: path='{{check_mk_agent_libdir}}/{{item}}' state=directory owner=root group=root mode=0755
-  with_items:
+  loop:
     - plugins
     - local
 
@@ -19,9 +19,11 @@
 
 - name: Configure xinetd
   lineinfile: dest=/etc/xinetd.d/{{check_mk_agent_xinetd_file}} regexp='^(\s*)#?({{item.key}}\s+)=' line='\1\2= {{item.value}}' backrefs=yes
-  with_dict:
-    disable: 'no'
-    only_from: '{{check_mk_agent_servers | join(" ")}}'
+  loop: '{{options | dict2items}}'
+  vars:
+    options:
+      disable: 'no'
+      only_from: '{{check_mk_agent_servers | join(" ")}}'
   register: check_mk_agent_r__xinetd
   notify: Restart xinetd
   ignore_errors: ansible_check_mode and "does not exist" in check_mk_agent_r__xinetd.msg
@@ -31,4 +33,4 @@
 
 - name: Install extra plugins
   get_url: dest=/usr/lib/check_mk_agent/plugins/ url={{item}} mode=0755 validate_certs={{check_mk_agent_validate_certs}}
-  with_items: '{{check_mk_agent_plugins}}'
+  loop: '{{check_mk_agent_plugins}}'
