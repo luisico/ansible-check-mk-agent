@@ -17,6 +17,10 @@
 - name: Configure directory for MK_LIBDIR
   lineinfile: dest=/usr/bin/check_mk_agent regexp='^export MK_LIBDIR=.*' line='export MK_LIBDIR="{{check_mk_agent_libdir}}"'
 
+- name: Check if check_mk_agent config for xinetd is present
+  stat: path=/etc/xinetd.d/{{check_mk_agent_xinetd_file}}
+  register: check_mk_agent_r__xinetd
+
 - name: Configure xinetd
   lineinfile: dest=/etc/xinetd.d/{{check_mk_agent_xinetd_file}} regexp='^(\s*)#?({{item.key}}\s+)=' line='\1\2= {{item.value}}' backrefs=yes
   loop: '{{options | dict2items}}'
@@ -24,9 +28,8 @@
     options:
       disable: 'no'
       only_from: '{{check_mk_agent_servers | join(" ")}}'
-  register: check_mk_agent_r__xinetd
   notify: Restart xinetd
-  ignore_errors: ansible_check_mode and "does not exist" in check_mk_agent_r__xinetd.msg
+  when: check_mk_agent_r__xinetd.stat.exists
 
 - name: Enable and start xinetd service
   service: name=xinetd state=started enabled=yes
