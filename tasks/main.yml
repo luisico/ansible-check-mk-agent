@@ -1,39 +1,59 @@
 ---
-- name: Install Check MK and dependencies
+- name: Install Check MK and dependencies   # noqa package-latest
   yum:
     name:
-      - '{{check_mk_agent_rpm}}'
+      - '{{ check_mk_agent_rpm }}'
       - xinetd
     state: latest
-    validate_certs: '{{check_mk_agent_validate_certs}}'
+    validate_certs: '{{ check_mk_agent_validate_certs }}'
   notify: Restart xinetd
 
 - name: Create MK_LIBDIR destination directory
-  file: path='{{check_mk_agent_libdir}}/{{item}}' state=directory owner=root group=root mode=0755
+  file:
+    path: '{{ check_mk_agent_libdir }}/{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
   loop:
     - plugins
     - local
 
 - name: Configure directory for MK_LIBDIR
-  lineinfile: dest=/usr/bin/check_mk_agent regexp='^export MK_LIBDIR=.*' line='export MK_LIBDIR="{{check_mk_agent_libdir}}"'
+  lineinfile:
+    dest: /usr/bin/check_mk_agent
+    regexp: '^export MK_LIBDIR=.*'
+    line: 'export MK_LIBDIR="{{ check_mk_agent_libdir }}"'
 
 - name: Check if check_mk_agent config for xinetd is present
-  stat: path=/etc/xinetd.d/{{check_mk_agent_xinetd_file}}
+  stat:
+    path: '/etc/xinetd.d/{{ check_mk_agent_xinetd_file }}'
   register: check_mk_agent_r__xinetd
 
 - name: Configure xinetd
-  lineinfile: dest=/etc/xinetd.d/{{check_mk_agent_xinetd_file}} regexp='^(\s*)#?({{item.key}}\s+)=' line='\1\2= {{item.value}}' backrefs=yes
-  loop: '{{options | dict2items}}'
+  lineinfile:
+    dest: '/etc/xinetd.d/{{ check_mk_agent_xinetd_file }}'
+    regexp: '^(\s*)#?({{ item.key }}\s+)='
+    line: '\1\2= {{ item.value }}'
+    backrefs: true
+  loop: '{{ options | dict2items }}'
   vars:
     options:
       disable: 'no'
-      only_from: '{{check_mk_agent_servers | join(" ")}}'
+      only_from: '{{ check_mk_agent_servers | join(" ") }}'
   notify: Restart xinetd
   when: check_mk_agent_r__xinetd.stat.exists
 
 - name: Enable and start xinetd service
-  service: name=xinetd state=started enabled=yes
+  service:
+    name: xinetd
+    state: started
+    enabled: true
 
 - name: Install extra plugins
-  get_url: dest=/usr/lib/check_mk_agent/plugins/ url={{item}} mode=0755 validate_certs={{check_mk_agent_validate_certs}}
-  loop: '{{check_mk_agent_plugins}}'
+  get_url:
+    dest: /usr/lib/check_mk_agent/plugins/
+    url: '{{ item }}'
+    mode: '0755'
+    validate_certs: '{{ check_mk_agent_validate_certs }}'
+  loop: '{{ check_mk_agent_plugins }}'
