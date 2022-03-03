@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: check_mk_agent
   author: Luis Gracia
   description: Install Check_MK agent
   license: MIT
